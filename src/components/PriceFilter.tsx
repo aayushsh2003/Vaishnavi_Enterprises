@@ -13,8 +13,8 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   onPriceChange 
 }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [localMin, setLocalMin] = useState(minPrice);
-  const [localMax, setLocalMax] = useState(maxPrice);
+  const [localMin, setLocalMin] = useState<number>(minPrice);
+  const [localMax, setLocalMax] = useState<number>(maxPrice);
 
   useEffect(() => {
     setLocalMin(minPrice);
@@ -26,17 +26,20 @@ const PriceFilter: React.FC<PriceFilterProps> = ({
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value) || 0;
     setLocalMin(value);
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    const value = parseInt(e.target.value) || 0;
     setLocalMax(value);
   };
 
   const handleApply = () => {
-    onPriceChange(localMin, localMax);
+    // Ensure min is not greater than max
+    const validMin = Math.min(localMin, localMax);
+    const validMax = Math.max(localMin, localMax);
+    onPriceChange(validMin, validMax);
   };
 
   return (
